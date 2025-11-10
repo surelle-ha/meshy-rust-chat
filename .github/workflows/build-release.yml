@@ -13,6 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -22,10 +23,11 @@ jobs:
       - name: Build
         run: cargo build --release
 
+      # Create release once on Ubuntu runner
       - name: Create GitHub Release
         if: matrix.os == 'ubuntu-latest'
         id: create_release
-        uses: actions/create-release@v2
+        uses: actions/create-release@v1
         with:
           tag_name: v${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
@@ -33,7 +35,10 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Use a personal access token if GITHUB_TOKEN fails
+          # GITHUB_TOKEN: ${{ secrets.PAT }}
 
+      # Upload Linux binary
       - name: Upload Linux binary
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-release-asset@v1
@@ -43,6 +48,7 @@ jobs:
           asset_name: meshy-rust-chat-linux
           asset_content_type: application/octet-stream
 
+      # Upload Windows binary
       - name: Upload Windows binary
         if: matrix.os == 'windows-latest'
         uses: actions/upload-release-asset@v1
