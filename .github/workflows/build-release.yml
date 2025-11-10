@@ -35,15 +35,22 @@ jobs:
             cargo build --release
           fi
 
-      # Upload binaries as artifacts (matrix-safe)
-      - name: Upload binary artifact
+      # Upload binaries separately
+      - name: Upload Linux binary
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-binary
-          path: ${{ matrix.os == 'ubuntu-latest' && 'target/release/meshy-rust-chat' || 'target/release/meshy-rust-chat.exe' }}
+          name: ubuntu-latest-binary
+          path: target/release/meshy-rust-chat
+
+      - name: Upload Windows binary
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-latest-binary
+          path: target/release/meshy-rust-chat.exe
 
   release:
-    permissions: write-all
     runs-on: ubuntu-latest
     needs: build
     steps:
