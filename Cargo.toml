@@ -1,0 +1,10 @@
+[package]
+name = "meshy-rust-chat"
+version = "1.0.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1.43", features = ["full"] }
+anyhow = "1.0"
+whoami = "1.5"
+local_ipaddress = "0.1.3"
