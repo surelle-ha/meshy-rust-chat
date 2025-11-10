@@ -68,7 +68,7 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Upload binaries to release
       - name: Upload Linux binary
@@ -78,6 +78,7 @@ jobs:
           asset_path: ./release/meshy-rust-chat
           asset_name: meshy-rust-chat-linux
           asset_content_type: application/octet-stream
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Windows binary
         uses: actions/upload-release-asset@v1
@@ -86,3 +87,4 @@ jobs:
           asset_path: ./release/meshy-rust-chat.exe
           asset_name: meshy-rust-chat-windows.exe
           asset_content_type: application/octet-stream
+          token: ${{ secrets.GITHUB_TOKEN }}
