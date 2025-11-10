@@ -21,27 +21,34 @@ jobs:
           override: true
 
       - name: Build
-        run: |
-          cargo build --release
-        shell: bash
+        run: cargo build --release
 
-      - name: Create GitHub Release (Linux only)
+      - name: Create GitHub Release
         if: matrix.os == 'ubuntu-latest'
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@v2
         with:
           tag_name: v${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
           draft: false
           prerelease: false
-          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Release Asset
+      - name: Upload Linux binary
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ matrix.os == 'ubuntu-latest' && 'target/release/meshy-rust-chat' || 'target/release/meshy-rust-chat.exe' }}
-          asset_name: ${{ matrix.os == 'ubuntu-latest' && 'meshy-rust-chat-linux' || 'meshy-rust-chat-windows.exe' }}
+          asset_path: target/release/meshy-rust-chat
+          asset_name: meshy-rust-chat-linux
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows binary
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/release/meshy-rust-chat.exe
+          asset_name: meshy-rust-chat-windows.exe
           asset_content_type: application/octet-stream
