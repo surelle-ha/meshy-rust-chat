@@ -37,7 +37,7 @@ jobs:
 
       # Upload binaries as artifacts (matrix-safe)
       - name: Upload binary artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-binary
           path: ${{ matrix.os == 'ubuntu-latest' && 'target/release/meshy-rust-chat' || 'target/release/meshy-rust-chat.exe' }}
@@ -51,13 +51,13 @@ jobs:
 
       # Download artifacts from matrix jobs
       - name: Download Linux binary
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ubuntu-latest-binary
           path: ./release
 
       - name: Download Windows binary
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: windows-latest-binary
           path: ./release
